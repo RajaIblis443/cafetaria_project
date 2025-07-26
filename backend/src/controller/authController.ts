@@ -53,7 +53,7 @@ export class AuthController {
           user: {
             id: userId,
             email,
-            role: "guest",
+            role: authData.user.role,
           },
           session: authData.session,
         },
@@ -98,7 +98,7 @@ export class AuthController {
           user: {
             id: authData.user.id,
             email: authData.user.email,
-            role: "guest", // Default role, adjust as needed
+            role: authData.user.role,
           },
           session: authData.session,
         },
@@ -176,5 +176,4 @@ export class AuthController {
       });
     }
   }
-  
 }

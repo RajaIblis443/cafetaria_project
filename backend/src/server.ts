@@ -5,8 +5,10 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import { AuthController } from "./controller/authController";
 import authRouter from "./routes/authRouter";
+import productRouter from "./routes/productRouter";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger";
+import path from "path";
 
 dotenv.config();
 
@@ -42,6 +44,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", authRouter);
+app.use("/api/product", productRouter);
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://127.0.0.1:${PORT}`);
