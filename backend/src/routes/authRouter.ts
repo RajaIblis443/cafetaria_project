@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AuthController } from "../controller/authController";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { roleMiddleware } from "../middleware/roleMiddleware";
+import { AdminController } from "../controller/adminController";
 
 const router = Router();
 
@@ -106,5 +107,41 @@ router.post(
   roleMiddleware(["admin", "super-admin"]),
   AuthController.approveMitra
 );
+
+/**
+ * @swagger
+ * /api/auth/create-admin:
+ *   post:
+ *     summary: Register a new admin
+ *     tags: [Auth]
+ *     security:
+ *     - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *               - telephone
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               telephone:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Missing fields or Supabase error
+ */
+router.post("/create-admin", AdminController.createAdmin);
 
 export default router;
