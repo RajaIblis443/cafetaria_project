@@ -142,6 +142,11 @@ router.post(
  *       400:
  *         description: Missing fields or Supabase error
  */
-router.post("/create-admin", AdminController.createAdmin);
+router.post(
+  "/create-admin",
+  authMiddleware,
+  roleMiddleware(["admin", "super-admin"]),
+  AdminController.createAdmin
+);
 
 export default router;
