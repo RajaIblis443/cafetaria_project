@@ -1,4 +1,4 @@
-import Mulyanto from '@/views/Mulyanto.vue'
+import LandingPage from '@/views/LandingPage.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -6,9 +6,9 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Mulyanto,
-    },
+      name: 'landing-page',
+      component: LandingPage,
+    }
   ],
 })
 
