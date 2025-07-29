@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import supabase from "../config/supabase";
+import { error } from "console";
 
 export class AuthController {
   static async createUser(req: Request, res: Response) {
@@ -34,7 +35,7 @@ export class AuthController {
           name,
           email,
           telephone,
-          role: "guest",
+          role: "mitra",
         },
       ]);
 
@@ -45,6 +46,19 @@ export class AuthController {
         });
       }
 
+      const { error: mitraError } = await supabase.from("mitra").insert([
+        {
+          id_user: userId,
+          is_open: true,
+        },
+      ]);
+
+      if (mitraError) {
+        return res.status(500).json({
+          success: false,
+          message: `Failed to create mitra profile. Error: ${mitraError.message}`,
+        });
+      }
       // 3. Sukses
       return res.status(201).json({
         success: true,
@@ -105,71 +119,6 @@ export class AuthController {
       });
     } catch (error) {
       console.error("Login error:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error",
-      });
-    }
-  }
-
-  static async approveMitra(req: Request, res: Response) {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        error: "User ID is required",
-      });
-    }
-
-    try {
-      const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("id, email")
-        .eq("email", email)
-        .single();
-
-      if (userError || !user) {
-        throw new Error(
-          "Gagal mendapatkan user ID, error" + userError?.message
-        );
-      }
-
-      const { data, error } = await supabase.from("mitra").insert([
-        {
-          id_user: user.id,
-          is_open: false,
-        },
-      ]);
-
-      if (error) {
-        return res.status(500).json({
-          success: false,
-          message: `Failed to approve mitra. Error: ${error.message}`,
-        });
-      }
-
-      const { error: updateError } = await supabase
-        .from("users")
-        .update({
-          role: "mitra",
-        })
-        .eq("email", email);
-
-      if (updateError) {
-        return res.status(500).json({
-          success: false,
-          message: `Failed to update user role. Error: ${updateError.message}`,
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Mitra approved successfully",
-        data: user,
-      });
-    } catch (error) {
-      console.error("Approve Mitra error:", error);
       return res.status(500).json({
         success: false,
         message: "Internal server error",

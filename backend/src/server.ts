@@ -22,22 +22,11 @@ app.get("/swagger.json", (req, res) => {
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "http://localhost:5173",
   })
 );
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      useDefaults: true,
-      directives: {
-        "connect-src": ["'self'", "http://localhost:3000"],
-        "script-src": ["'self'", "'unsafe-inline'"],
-      },
-    },
-  })
-);
+app.use(helmet({ contentSecurityPolicy: false }));
+
 app.use(morgan("combined"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +34,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
+
+app.use("/uploads", (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+});
+
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.listen(PORT, () => {

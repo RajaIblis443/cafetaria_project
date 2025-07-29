@@ -38,6 +38,7 @@ export class ProductController {
           description,
           image: "uploads/" + image,
           mitra_id: mitraData.id,
+          is_aproved: false,
           is_available: true,
         },
       ])
@@ -82,7 +83,15 @@ export class ProductController {
       return res.status(404).json({ message: "No products found" });
     }
 
-    return res.status(200).json(products);
+    const BASE_IMAGE_URL =
+      process.env.BASE_IMAGE_URL || "http://localhost:3000/";
+
+    const updateProducts = products.map((product) => ({
+      ...product,
+      image: product.image ? `${BASE_IMAGE_URL}${product.image}` : null,
+    }));
+
+    return res.status(200).json(updateProducts);
   }
 
   static async deleteProduct(req: Request, res: Response) {
@@ -123,5 +132,41 @@ export class ProductController {
     }
 
     return res.status(200).json({ message: "Product deleted successfully" });
+  }
+
+  static async approveProduct(req: Request, res: Response) {
+    const { id } = req.body;
+
+    if (id === undefined || id === null || id === "") {
+      return res.status(400).json({ error: "Product ID is required" });
+    }
+    try {
+      const { data: productData, error: productError } = await supabase
+        .from("product")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (productError) {
+        return res.status(500).json({ error: productError.message });
+      }
+
+      if (!productData) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+
+      const { error: updateError } = await supabase
+        .from("product")
+        .update({ is_aproved: true })
+        .eq("id", id);
+
+      if (updateError) {
+        return res.status(500).json({ error: updateError.message });
+      }
+
+      return res.status(200).json({ message: "Product approved successfully" });
+    } catch (error) {
+      console.error("Error approving product:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
   }
 }
