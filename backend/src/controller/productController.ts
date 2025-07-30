@@ -38,7 +38,7 @@ export class ProductController {
           description,
           image: "uploads/" + image,
           mitra_id: mitraData.id,
-          is_aproved: false,
+          is_approve: false,
           is_available: true,
         },
       ])
