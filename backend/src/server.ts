@@ -20,11 +20,7 @@ app.get("/swagger.json", (req, res) => {
   res.send(swaggerSpec);
 });
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-  })
-);
+app.use(cors());
 app.use(helmet({ contentSecurityPolicy: false }));
 
 app.use(morgan("combined"));
@@ -39,7 +35,7 @@ app.use("/uploads", (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
   res.header("Cross-Origin-Resource-Policy", "cross-origin");
   next();
-});
+})
 
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
