@@ -7,12 +7,27 @@ const router = createRouter({
     {
       path: '/',
       name: 'landing-page',
-      component: import('@/views/LandingPage.vue'),
+      component: () => import('@/views/LandingPage.vue'),
     },
     {
       path: '/login-mitra',
       name: 'login-mitra',
       component: () => import('@/views/mitra/LoginMitraPage.vue'),
+    },
+    {
+      path: '/mitra/products',
+      name: 'product-management',
+      component: () => import('@/views/mitra/ProductManagement.vue'),
+    },
+    {
+      path: '/mitra/add-product',
+      name: 'add-product',
+      component: () => import('@/views/mitra/TambahProduk.vue'),
+    },
+    {
+      path: '/tambah-produk',
+      name: 'tambah-produk',
+      component: () => import('@/views/mitra/TambahProduk.vue'),
     },
   ],
 })
