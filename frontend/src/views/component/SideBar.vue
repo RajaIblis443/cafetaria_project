@@ -11,6 +11,11 @@
                     </button>
                   </div>
                 </div>
+
+    <!-- Overlay for mobile -->
+    <div v-if="isSidebarOpen" @click="toggleSidebar"
+      class="fixed inset-0 bg-opacity-25 md:hidden z-30">
+    </div>
             
                 <!-- Sidebar -->
                 <aside :class="[
@@ -18,17 +23,13 @@
                   'fixed md:relative w-[280px] md:w-64 min-h-screen transition-transform duration-300 ease-in-out z-40',
                   isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
                 ]">
-                  <!-- Overlay for mobile -->
-                  <div v-if="isSidebarOpen" @click="toggleSidebar" class="fixed inset-0 bg-black bg-opacity-50 md:hidden z-30">
-                  </div>
             
                   <div>
                     <div class="px-8 py-6 text-2xl font-bold hidden md:block">CafeTaria</div>
                     <nav class="mt-4">
                       <ul class="space-y-2">
                         <li>
-                          <router-link to="/mitra/products"
-                            :class="[
+              <router-link to="/mitra/products" :class="[
                               'flex items-center px-8 py-2 rounded-r-full',
                               currentRoute === '/mitra/products' ? 'bg-green-100 text-green-800 font-medium' : 'text-gray-700 hover:bg-green-50'
                             ]">
@@ -39,8 +40,7 @@
                           </router-link>
                         </li>
                         <li>
-                          <router-link to="/mitra/add-product"
-                            :class="[
+              <router-link to="/mitra/add-product" :class="[
                               'flex items-center px-8 py-2 rounded-r-full',
                               currentRoute === '/mitra/add-product' ? 'bg-green-100 text-green-800 font-medium' : 'text-gray-700 hover:bg-green-50'
                             ]">
@@ -54,7 +54,8 @@
                     </nav>
                   </div>
                   <div class="px-8 py-6 flex items-center gap-3">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile" class="w-10 h-10 rounded-full object-cover" />
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="profile"
+          class="w-10 h-10 rounded-full object-cover" />
                     <div>
                       <div class="font-semibold text-sm">Cilla</div>
                       <div class="text-xs text-gray-400">08214058756</div>
