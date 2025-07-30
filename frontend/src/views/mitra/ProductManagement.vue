@@ -5,9 +5,10 @@
     <!-- Main Content -->
     <main class="flex-1 p-4 md:p-8 mt-0 md:mt-0">
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-0 mb-6">
-        <button class="hidden mr-4 p-2 rounded-full hover:bg-gray-200">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        <button class="hidden sm:block mr-4 p-2 border-2 border-gray-300 rounded-lg hover:bg-gray-200">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 12h14m-7-7l-7 7l7 7" />
           </svg>
         </button>
         <h1 class="text-xl md:text-2xl font-bold flex-1">Daftar Produk</h1>
@@ -19,51 +20,52 @@
           Tambah Produk
         </button>
       </div>
-      <hr class="mb-6" />
+      <hr class="mb-20" />
       <div class="overflow-x-auto">
-        <table class="min-w-full rounded-lg border-separate border-spacing-0">
-          <thead class="hidden sm:table-header-group">
-            <tr class="bg-gray-100">
-              <th class="px-4 py-2 text-left font-medium text-gray-700">Produk</th>
-              <th class="px-4 py-2 text-left font-medium text-gray-700">Tanggal</th>
-              <th class="px-4 py-2 text-left font-medium text-gray-700">Status</th>
-              <th class="px-4 py-2 text-center font-medium text-gray-700">Action</th>
+        <table class="min-w-full">
+          <thead class="bg-gray-100">
+            <tr class="border-y-2 border-gray-300">
+              <th class="py-4 px-6 text-left text-gray-600">Produk</th>
+              <th class="py-4 px-6 text-left text-gray-600">Tanggal</th>
+              <th class="py-4 px-6 text-left text-gray-600">Status</th>
+              <th class="py-4 px-6 text-right text-gray-600">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              class="sm:border-b border-gray-300 bg-white rounded-lg sm:rounded-none shadow-sm sm:shadow-none mb-4 sm:mb-0 block sm:table-row">
-              <td class="flex items-start gap-3 px-4 py-3 sm:table-cell">
-                <img src="/img/makanan.png" alt="Cake Strawberry" class="w-14 h-14 rounded object-cover shrink-0" />
-                <div class="flex flex-col justify-center min-h-[3.5rem]">
-                  <div class="font-semibold">Cake Strawberry</div>
-                  <div class="text-sm text-gray-500">Rp 5000</div>
-                  <div class="sm:hidden mt-2 flex items-center gap-2">
-                    <span
-                      class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">Published</span>
-                    <span class="text-sm text-gray-500">Jun 24, 2025</span>
+            <tr class="border-b-2 border-gray-300 hover:bg-gray-50">
+              <td class="py-4 px-6">
+                <div class="flex items-center gap-4">
+                  <img src="/img/makanan.png" alt="Cake Strawberry" class="w-16 h-16 rounded-lg object-cover" />
+                  <div>
+                    <h3 class="text-lg font-semibold">Cake Strawberry</h3>
+                    <p class="text-gray-600">Rp 5000</p>
                   </div>
                 </div>
               </td>
-              <td class="hidden sm:table-cell px-4 py-3 whitespace-nowrap">Jun 24, 2025</td>
-              <td class="hidden sm:table-cell px-4 py-3">
-                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">Published</span>
+              <td class="py-4 px-6 text-gray-600">Jun 24, 2025</td>
+              <td class="py-4 px-6">
+                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Published</span>
               </td>
-              <td class="px-4 py-3 flex sm:table-cell sm:text-center">
-                <div class="flex gap-2 w-full sm:w-auto sm:justify-center mt-3 sm:mt-0">
-                  <button class="bg-green-500 hover:bg-green-600 text-white p-2 rounded"><svg class="w-4 h-4"
-                      fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                    </svg></button>
-                  <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"><svg class="w-4 h-4" fill="none"
-                      stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M15 12H9m6 0a6 6 0 11-12 0 6 6 0 012 0z" />
-                    </svg></button>
-                  <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded"><svg class="w-4 h-4" fill="none"
-                      stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg></button>
+              <td class="py-4 px-6">
+                <div class="flex gap-2 justify-end">
+                  <button class="p-2 bg-[#4ade80] hover:bg-[#22c55e] text-white rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" d="M12 19V5m-7 7l7 7l7-7" />
+                    </svg>
+                  </button>
+                  <button class="p-2 bg-[#60a5fa] hover:bg-[#3b82f6] text-white rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                  <button class="p-2 bg-[#f87171] hover:bg-[#ef4444] text-white rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </div>
               </td>
             </tr>
