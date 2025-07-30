@@ -156,19 +156,19 @@
       >
         <div
           v-for="product in displayedProducts"
-          :key="product.id"
+          :key="product['id']"
           class="bg-gray-100 rounded border-2 border-white px-3 md:px-4 py-8 md:py-10 min-h-[140px] md:min-h-[150px] flex flex-col items-center relative mt-20 md:mt-24 lg:mt-32 mb-0 overflow-visible transition-transform hover:scale-105 hover:shadow-md"
         >
           <img
-            :src="product.image"
-            :alt="product.name"
+            :src="product['image']"
+            :alt="product['name']"
             class="w-[100px] h-[100px] md:w-[120px] md:h-[120px] lg:w-[150px] lg:h-[150px] object-cover rounded-full absolute -top-12 md:-top-16 lg:-top-20 left-1/2 -translate-x-1/2 bg-white z-20"
           />
           <div class="text-center mt-8 md:mt-10 lg:mt-12">
             <h3 class="text-sm md:text-base font-semibold mb-1 font-poppins">
-              {{ product.name }}
+              {{ product['name'] }}
             </h3>
-            <p class="text-sm md:text-base text-gray-600">Rp {{ product.price }}</p>
+            <p class="text-sm md:text-base text-gray-600">Rp {{ product['price'] }}</p>
           </div>
         </div>
 
@@ -225,14 +225,14 @@ import ProductServices from '@/services/productServices'
 const mobileMenuOpen = ref(false)
 
 // Infinite scroll state
-const allProducts = ref([])
-const displayedProducts = ref([])
+const allProducts = ref<any[]>([])
+const displayedProducts = ref<any[]>([])
 const loading = ref(false)
 const hasReachedEnd = ref(false)
 const scrollObserver = ref(null)
 const currentIndex = ref(0)
 const itemsPerLoad = 8
-let observer = null
+let observer: IntersectionObserver | null = null
 
 function toggleMobileMenu() {
   mobileMenuOpen.value = !mobileMenuOpen.value
