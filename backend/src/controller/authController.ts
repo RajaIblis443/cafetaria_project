@@ -29,15 +29,19 @@ export class AuthController {
       const userId = authData.user.id;
 
       // 2. Simpan data tambahan di tabel `users`
-      const { error: insertError } = await supabase.from("users").insert([
-        {
-          id: userId, // penting: pakai id dari Supabase Auth
-          name,
-          email,
-          telephone,
-          role: "mitra",
-        },
-      ]);
+      const { data: usersData, error: insertError } = await supabase
+        .from("users")
+        .insert([
+          {
+            id: userId, // penting: pakai id dari Supabase Auth
+            name,
+            email,
+            telephone,
+            role: "mitra",
+          },
+        ])
+        .select("role")
+        .single();
 
       if (insertError) {
         return res.status(500).json({
@@ -67,7 +71,7 @@ export class AuthController {
           user: {
             id: userId,
             email,
-            role: authData.user.role,
+            role: usersData?.role || "null",
           },
           session: authData.session,
         },
@@ -104,6 +108,11 @@ export class AuthController {
           error: authEror?.message || "Invalid email or password",
         });
       }
+      const { data: userProfile, error: profileError } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single();
 
       return res.status(200).json({
         success: true,
@@ -112,7 +121,7 @@ export class AuthController {
           user: {
             id: authData.user.id,
             email: authData.user.email,
-            role: authData.user.role,
+            role: userProfile?.role || "null",
           },
           session: authData.session,
         },

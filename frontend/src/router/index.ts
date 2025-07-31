@@ -10,9 +10,9 @@ const router = createRouter({
       component: () => import('@/views/LandingPage.vue'),
     },
     {
-      path: '/login-mitra',
-      name: 'login-mitra',
-      component: () => import('@/views/mitra/LoginMitraPage.vue'),
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/Login.vue'),
     },
     {
       path: '/mitra/products',

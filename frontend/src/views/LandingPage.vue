@@ -8,67 +8,38 @@
 
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex gap-6 lg:gap-8 flex-1 justify-center">
-          <a
-            href="#beranda"
-            class="text-[#cbcbcb] hover:text-white no-underline text-sm lg:text-base font-medium transition-colors"
-            >Beranda</a
-          >
-          <a
-            href="#menu"
-            class="text-[#cbcbcb] hover:text-white no-underline text-sm lg:text-base font-medium transition-colors"
-            >Menu</a
-          >
-          <a
-            href="#"
-            class="text-[#cbcbcb] hover:text-white no-underline text-sm lg:text-base font-medium transition-colors"
-            >Contact</a
-          >
+          <a href="#beranda"
+            class="text-[#cbcbcb] hover:text-white no-underline text-sm lg:text-base font-medium transition-colors">Beranda</a>
+          <a href="#menu"
+            class="text-[#cbcbcb] hover:text-white no-underline text-sm lg:text-base font-medium transition-colors">Menu</a>
+          <a href="#"
+            class="text-[#cbcbcb] hover:text-white no-underline text-sm lg:text-base font-medium transition-colors">Contact</a>
         </nav>
 
         <!-- Mobile menu button -->
         <button @click="toggleMobileMenu" class="md:hidden text-white p-2" aria-label="Toggle menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
 
         <!-- Desktop Login Button -->
-        <button
-          class="hidden md:block bg-white text-[#174c3c] rounded-full px-6 lg:px-12 py-2 font-semibold text-sm lg:text-lg hover:bg-gray-100 transition-colors"
-        >
+        <router-link to="/login"
+          class="hidden md:block bg-white text-[#174c3c] rounded-full px-6 lg:px-12 py-2 font-semibold text-sm lg:text-lg hover:bg-gray-100 transition-colors">
           Login
-        </button>
+        </router-link>
       </div>
 
       <!-- Mobile Navigation Menu -->
       <div v-if="mobileMenuOpen" class="md:hidden bg-[#174c3c] border-t border-gray-400/30 py-4">
         <nav class="flex flex-col gap-4 px-4">
-          <a
-            href="#beranda"
-            @click="closeMobileMenu"
-            class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2"
-            >Beranda</a
-          >
-          <a
-            href="#menu"
-            @click="closeMobileMenu"
-            class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2"
-            >Menu</a
-          >
-          <a
-            href="#"
-            @click="closeMobileMenu"
-            class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2"
-            >Contact</a
-          >
-          <button
-            class="bg-white text-[#174c3c] rounded-full px-8 py-2 font-semibold text-base mt-4 self-start"
-          >
+          <a href="#beranda" @click="closeMobileMenu"
+            class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2">Beranda</a>
+          <a href="#menu" @click="closeMobileMenu"
+            class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2">Menu</a>
+          <a href="#" @click="closeMobileMenu"
+            class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2">Contact</a>
+          <button class="bg-white text-[#174c3c] rounded-full px-8 py-2 font-semibold text-base mt-4 self-start">
             Login
           </button>
         </nav>
@@ -76,18 +47,12 @@
     </header>
 
     <!-- Hero Section with better mobile layout -->
-    <section
-      class="bg-[#174c3c] text-white text-center py-12 md:py-16 lg:py-20 px-4 md:px-8 min-h-screen"
-      id="beranda"
-    >
+    <section class="bg-[#174c3c] text-white text-center py-12 md:py-16 lg:py-20 px-4 md:px-8 min-h-screen" id="beranda">
       <button
-        class="bg-[#174c3c] border border-white text-white rounded-full px-8 md:px-19 py-1 md:py-3 text-sm md:text-base mb-4 md:mb-5"
-      >
+        class="bg-[#174c3c] border border-white text-white rounded-full px-8 md:px-19 py-1 md:py-3 text-sm md:text-base mb-4 md:mb-5">
         Cafetaria
       </button>
-      <h1
-        class="text-3xl sm:text-4xl md:text-5xl lg:text-[100px] font-bold my-4 md:my-5 leading-tight"
-      >
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[100px] font-bold my-4 md:my-5 leading-tight">
         MAKANAN YANG BISA<br />DINIKMATI SEMUA
       </h1>
       <div class="max-w-2xl mx-auto">
@@ -98,30 +63,18 @@
       </div>
       <button
         class="bg-white text-[#174c3c] rounded-full px-8 md:px-16 py-3 md:py-4 font-semibold text-base md:text-lg inline-flex items-center gap-2 mt-8 md:mt-12 hover:bg-gray-100 transition-colors"
-        @click="scrollToMenu"
-      >
+        @click="scrollToMenu">
         Lihat Menu
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="3"
-          stroke="currentColor"
-          class="size-4 font-bold text-2xl"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"
+          class="size-4 font-bold text-2xl">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
         </svg>
       </button>
     </section>
 
     <!-- Marquee with FIXED animation -->
     <div
-      class="bg-[#f7c948] text-white py-3 md:py-4 px-4 md:px-8 text-xl md:text-2xl lg:text-3xl font-semibold overflow-hidden relative"
-    >
+      class="bg-[#f7c948] text-white py-3 md:py-4 px-4 md:px-8 text-xl md:text-2xl lg:text-3xl font-semibold overflow-hidden relative">
       <div class="flex animate-marquee">
         <!-- Set pertama konten -->
         <div class="flex gap-6 md:gap-10 shrink-0 py-2">
@@ -150,20 +103,12 @@
         <p class="text-sm md:text-base text-gray-600">teman-temannya.</p>
       </div>
 
-      <div
-        id="menu"
-        class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 px-4 md:px-8 lg:px-12 mt-6 md:mt-8 max-w-7xl mx-auto"
-      >
-        <div
-          v-for="product in displayedProducts"
-          :key="product['id']"
-          class="bg-gray-100 rounded border-2 border-white px-3 md:px-4 py-8 md:py-10 min-h-[140px] md:min-h-[150px] flex flex-col items-center relative mt-20 md:mt-24 lg:mt-32 mb-0 overflow-visible transition-transform hover:scale-105 hover:shadow-md"
-        >
-          <img
-            :src="product['image']"
-            :alt="product['name']"
-            class="w-[100px] h-[100px] md:w-[120px] md:h-[120px] lg:w-[150px] lg:h-[150px] object-cover rounded-full absolute -top-12 md:-top-16 lg:-top-20 left-1/2 -translate-x-1/2 bg-white z-20"
-          />
+      <div id="menu"
+        class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 px-4 md:px-8 lg:px-12 mt-6 md:mt-8 max-w-7xl mx-auto">
+        <div v-for="product in displayedProducts" :key="product['id']"
+          class="bg-gray-100 rounded border-2 border-white px-3 md:px-4 py-8 md:py-10 min-h-[140px] md:min-h-[150px] flex flex-col items-center relative mt-20 md:mt-24 lg:mt-32 mb-0 overflow-visible transition-transform hover:scale-105 hover:shadow-md">
+          <img :src="product['image']" :alt="product['name']"
+            class="w-[100px] h-[100px] md:w-[120px] md:h-[120px] lg:w-[150px] lg:h-[150px] object-cover rounded-full absolute -top-12 md:-top-16 lg:-top-20 left-1/2 -translate-x-1/2 bg-white z-20" />
           <div class="text-center mt-8 md:mt-10 lg:mt-12">
             <h3 class="text-sm md:text-base font-semibold mb-1 font-poppins">
               {{ product['name'] }}
@@ -175,9 +120,7 @@
         <!-- Loading indicator -->
         <div v-if="loading" class="col-span-full text-center py-8">
           <div class="inline-flex items-center gap-2 text-gray-600">
-            <div
-              class="w-6 h-6 border-2 border-[#174c3c] border-t-transparent rounded-full animate-spin"
-            ></div>
+            <div class="w-6 h-6 border-2 border-[#174c3c] border-t-transparent rounded-full animate-spin"></div>
             <span>Memuat menu lainnya...</span>
           </div>
         </div>
@@ -188,10 +131,7 @@
         </div>
 
         <!-- End of data indicator -->
-        <div
-          v-if="hasReachedEnd && displayedProducts.length > 0"
-          class="col-span-full text-center py-8"
-        >
+        <div v-if="hasReachedEnd && displayedProducts.length > 0" class="col-span-full text-center py-8">
           <p class="text-gray-500">Semua menu telah ditampilkan</p>
         </div>
       </div>
@@ -208,9 +148,7 @@
         <p class="text-xs md:text-sm text-gray-400 mt-1">
           Makanan dari proses belajar, bukan sekedar sajian.
         </p>
-        <div
-          class="w-full max-w-[800px] h-0.5 bg-gray-300 my-12 md:my-16 lg:my-20 mx-auto rounded"
-        ></div>
+        <div class="w-full max-w-[800px] h-0.5 bg-gray-300 my-12 md:my-16 lg:my-20 mx-auto rounded"></div>
         <span class="text-xs md:text-sm text-gray-300">Copyright &copy; 2025. Cafetaria</span>
       </div>
     </footer>
@@ -338,6 +276,7 @@ function capitalize(text: string) {
   0% {
     transform: translateX(0%);
   }
+
   100% {
     transform: translateX(-100%);
   }
