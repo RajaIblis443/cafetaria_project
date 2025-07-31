@@ -28,6 +28,16 @@ const router = createRouter({
       meta: { role: 'mitra' },
       beforeEnter: authGuard,
     },
+    {
+      path: '/mitra/edit-product',
+      name: 'edit-product',
+      component: () => import('@/views/mitra/EditProduk.vue'),
+    },
+    {
+      path: '/admin/products',
+      name: 'admin-product-management',
+      component: () => import('@/views/admin/ProductManagement.vue'),
+    },
   ],
 })
 
