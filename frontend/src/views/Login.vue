@@ -141,10 +141,16 @@ const handleLogin = async () => {
         localStorage.setItem('auth_token', response.success.access_token);
         localStorage.setItem('user_data', JSON.stringify(response.data));
 
+        console.info(response)
 
         // Redirect ke halaman dashboard atau home setelah delay singkat
         setTimeout(() => {
-          router.push('/mitra/products'); // Sesuaikan dengan route tujuan
+          if (response.data.user.role == "mitra") {
+            router.push('/mitra/products'); // Sesuaikan dengan route tujuan
+          }
+          if (response.data.user.role == "admin") {
+            router.push('/admin/dashboard')
+          }
         }, 1500);
 
         return true; // Success

@@ -1,4 +1,4 @@
-import LandingPage from '@/views/LandingPage.vue'
+import authGuard from '@/middleware/authMIddleware'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -18,16 +18,15 @@ const router = createRouter({
       path: '/mitra/products',
       name: 'product-management',
       component: () => import('@/views/mitra/ProductManagement.vue'),
+      meta: { role: 'mitra' },
+      beforeEnter: authGuard,
     },
     {
       path: '/mitra/add-product',
       name: 'add-product',
       component: () => import('@/views/mitra/TambahProduk.vue'),
-    },
-    {
-      path: '/tambah-produk',
-      name: 'tambah-produk',
-      component: () => import('@/views/mitra/TambahProduk.vue'),
+      meta: { role: 'mitra' },
+      beforeEnter: authGuard,
     },
   ],
 })

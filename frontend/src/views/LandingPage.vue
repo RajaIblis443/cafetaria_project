@@ -39,9 +39,10 @@
             class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2">Menu</a>
           <a href="#" @click="closeMobileMenu"
             class="text-[#cbcbcb] hover:text-white no-underline text-base font-medium py-2">Contact</a>
-          <button class="bg-white text-[#174c3c] rounded-full px-8 py-2 font-semibold text-base mt-4 self-start">
+          <router-link to="/login"
+            class="bg-white text-[#174c3c] rounded-full px-8 py-2 font-semibold text-base mt-4 self-start">
             Login
-          </button>
+          </router-link>
         </nav>
       </div>
     </header>
