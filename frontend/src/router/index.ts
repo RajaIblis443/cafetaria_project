@@ -29,6 +29,16 @@ const router = createRouter({
       name: 'tambah-produk',
       component: () => import('@/views/mitra/TambahProduk.vue'),
     },
+    {
+      path: '/mitra/edit-product',
+      name: 'edit-product',
+      component: () => import('@/views/mitra/EditProduk.vue'),
+    },
+    {
+      path: '/admin/products',
+      name: 'admin-product-management',
+      component: () => import('@/views/admin/ProductManagement.vue'),
+    },
   ],
 })
 
