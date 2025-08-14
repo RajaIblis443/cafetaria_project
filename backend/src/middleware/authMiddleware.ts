@@ -1,11 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../config/supabase";
 import { UserInterface } from "../types/userInterface";
-
-const supabase = createClient(
-  process.env.SUPABASE_URL || "",
-  process.env.SUPABASE_ANON_KEY || ""
-);
 
 export async function authMiddleware(
   req: Request,
@@ -30,7 +25,24 @@ export async function authMiddleware(
       .json({ success: false, message: "Invalid or expired token" });
   }
 
-  (req as any).user = user;
+  // Ambil data tambahan dari tabel users
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (userError || !userData) {
+    return res
+      .status(401)
+      .json({ success: false, message: "User data not found" });
+  }
+
+  // Gabungkan data auth user dengan data dari tabel users
+  (req as any).user = {
+    ...user,
+    ...userData,
+  };
 
   next();
 }

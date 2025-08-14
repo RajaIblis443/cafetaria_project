@@ -9,6 +9,17 @@ export class ProductController {
     const { name, price, description } = req.body;
     const user = (req as any).user;
 
+    // Debug logging
+    console.log("=== DEBUG POST PRODUCT ===");
+    console.log("Request body:", req.body);
+    console.log("Request file:", req.file);
+    console.log("User:", user);
+    console.log("Fields check:");
+    console.log("- name:", name);
+    console.log("- price:", price);
+    console.log("- description:", description);
+    console.log("- image filename:", req.file?.filename);
+
     if (!user) {
       return res.status(401).json({ error: "Unauthorized User NotFound" });
     }
@@ -16,17 +27,17 @@ export class ProductController {
     const image = req.file?.filename;
 
     if (!name || !image || !price || !description) {
+      console.log("Missing fields detected:");
+      console.log("- name missing:", !name);
+      console.log("- image missing:", !image);
+      console.log("- price missing:", !price);
+      console.log("- description missing:", !description);
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const { data: mitraData, error: mitraEror } = await supabase
-      .from("mitra")
-      .select("*")
-      .eq("id_user", user.id)
-      .single();
-
-    if (mitraEror) {
-      return res.status(500).json("error mitra");
+    // Pastikan user adalah mitra
+    if (user.role !== "mitra") {
+      return res.status(403).json({ error: "Only mitra can create products" });
     }
 
     const { data: productData, error: productError } = await supabase
@@ -37,7 +48,7 @@ export class ProductController {
           price: Number(price),
           description,
           image: "uploads/" + image,
-          mitra_id: mitraData.id,
+          mitra_id: user.id, // Langsung gunakan user.id sebagai mitra_id
           is_approve: false,
           is_available: true,
         },
@@ -59,7 +70,11 @@ export class ProductController {
   static async getProducts(req: Request, res: Response) {
     const { mitra_id, is_available, name } = req.query;
 
-    let query = supabase.from("product").select("*");
+    // Join dengan tabel users untuk mendapatkan informasi mitra
+    let query = supabase.from("product").select(`
+        *,
+        mitra:users!product_mitra_id_fkey(id, name, email)
+      `);
 
     if (mitra_id) {
       query = query.eq("mitra_id", mitra_id as string);
@@ -166,6 +181,65 @@ export class ProductController {
       return res.status(200).json({ message: "Product approved successfully" });
     } catch (error) {
       console.error("Error approving product:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  static async updateProductAvailability(req: Request, res: Response) {
+    const { id } = req.params;
+    const { is_available } = req.body;
+    const user = (req as any).user;
+
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (!id) {
+      return res.status(400).json({ error: "Product ID is required" });
+    }
+
+    if (typeof is_available !== "boolean") {
+      return res.status(400).json({ error: "is_available must be a boolean" });
+    }
+
+    try {
+      // First check if the product belongs to the user (mitra)
+      const { data: productData, error: productError } = await supabase
+        .from("product")
+        .select("*")
+        .eq("id", id)
+        .eq("mitra_id", user.id)
+        .single();
+
+      if (productError) {
+        return res.status(500).json({ error: productError.message });
+      }
+
+      if (!productData) {
+        return res
+          .status(404)
+          .json({
+            error:
+              "Product not found or you don't have permission to update this product",
+          });
+      }
+
+      // Update the availability
+      const { error: updateError } = await supabase
+        .from("product")
+        .update({ is_available })
+        .eq("id", id);
+
+      if (updateError) {
+        return res.status(500).json({ error: updateError.message });
+      }
+
+      return res.status(200).json({
+        message: "Product availability updated successfully",
+        is_available,
+      });
+    } catch (error) {
+      console.error("Error updating product availability:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
   }

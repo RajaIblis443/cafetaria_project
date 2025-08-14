@@ -12,6 +12,8 @@ const ensureDirectoryExists = (dirPath: string) => {
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     const uploadDir = "uploads/";
+    console.log("=== MULTER DEBUG ===");
+    console.log("Upload destination called:", uploadDir);
 
     // Buat direktori jika belum ada
     ensureDirectoryExists(uploadDir);
@@ -19,8 +21,17 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
+    console.log("=== MULTER FILENAME DEBUG ===");
+    console.log("File received:", file);
+    console.log("Original name:", file.originalname);
+    console.log("Mime type:", file.mimetype);
+    console.log("Size:", file.size);
+
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+    const filename = uniqueSuffix + path.extname(file.originalname);
+    console.log("Generated filename:", filename);
+
+    cb(null, filename);
   },
 });
 

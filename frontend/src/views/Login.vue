@@ -138,7 +138,7 @@ const handleLogin = async () => {
         showMessage('Login berhasil! Mengalihkan...', 'success');
         retryCount.value = 0; // Reset retry count on success
 
-        localStorage.setItem('auth_token', response.success.access_token);
+        localStorage.setItem('auth_token', response.data.session.access_token);
         localStorage.setItem('user_data', JSON.stringify(response.data));
 
         console.info(response)

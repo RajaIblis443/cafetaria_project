@@ -5,15 +5,17 @@ export default function authGuard(
   from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
-  const auth_token = JSON.parse(localStorage.getItem('auth_token') || '{}')
+  const auth_token = localStorage.getItem('auth_token')
   const user_data = JSON.parse(localStorage.getItem('user_data') || '{}')
 
   if (!auth_token && !user_data) {
-    next({ name: 'Login' })
+    next({ path: '/login' })
   }
 
-  const requiredRole = to.meta?.role
-  if (requiredRole && user_data.role !== requiredRole) {
+  const allowedRoles = to.meta?.roles as string[] | undefined
+  const user_role = user_data.user?.role
+
+  if (allowedRoles && user_role !== allowedRoles.includes(user_role)) {
     return next({ name: 'Unauthorized' }) // kamu bisa bikin halaman 403
   }
 
