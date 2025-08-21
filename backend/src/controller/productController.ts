@@ -171,7 +171,7 @@ export class ProductController {
 
       const { error: updateError } = await supabase
         .from("product")
-        .update({ is_aproved: true })
+        .update({ is_approve: true })
         .eq("id", id);
 
       if (updateError) {
@@ -216,12 +216,10 @@ export class ProductController {
       }
 
       if (!productData) {
-        return res
-          .status(404)
-          .json({
-            error:
-              "Product not found or you don't have permission to update this product",
-          });
+        return res.status(404).json({
+          error:
+            "Product not found or you don't have permission to update this product",
+        });
       }
 
       // Update the availability

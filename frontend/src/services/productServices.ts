@@ -45,6 +45,7 @@ class ProductServices {
   static async addProduct(productData: FormData) {
     try {
       const token = localStorage.getItem('auth_token')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const headers: any = {}
 
       if (token) {
@@ -62,6 +63,7 @@ class ProductServices {
         return response.data
       }
       throw new Error(`Unexpected response status: ${response.status}`)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Error adding product:', error)
       console.error('Response data:', error.response?.data)
@@ -69,12 +71,60 @@ class ProductServices {
     }
   }
 
-  static async deleteProduct(productId: string) {}
+  static async deleteProduct(productId: string) {
+    try {
+      const token = localStorage.getItem('auth_token')
+      const headers: Record<string, string> = {}
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`
+      }
+
+      const response = await http.delete(`/product/delete/${productId}`, { headers })
+
+      if (response.status >= 200 && response.status < 300) {
+        return response.data
+      }
+      throw new Error(`Unexpected response status: ${response.status}`)
+    } catch (error: unknown) {
+      console.error('Error deleting product:', error)
+      throw error
+    }
+  }
+
+  static async approveProduct(productId: string) {
+    try {
+      const token = localStorage.getItem('auth_token')
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`
+      }
+
+      const response = await http.put(
+        `/product/approve`,
+        {
+          id: productId,
+        },
+        { headers },
+      )
+
+      if (response.status >= 200 && response.status < 300) {
+        return response.data
+      }
+      throw new Error(`Unexpected response status: ${response.status}`)
+    } catch (error: unknown) {
+      console.error('Error approving product:', error)
+      throw error
+    }
+  }
 
   static async updateProductAvailability(productId: string, isAvailable: boolean) {
     try {
       const token = localStorage.getItem('auth_token')
-      const headers: any = {
+      const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       }
 
@@ -94,7 +144,7 @@ class ProductServices {
         return response.data
       }
       throw new Error(`Unexpected response status: ${response.status}`)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating product availability:', error)
       throw error
     }

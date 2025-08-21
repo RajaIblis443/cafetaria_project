@@ -77,6 +77,35 @@ router.post("/login", AuthController.loginUser);
 
 /**
  * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Logout successful"
+ *       401:
+ *         description: No token provided
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/logout", authMiddleware, AuthController.logoutUser);
+
+/**
+ * @swagger
  * /api/auth/create-admin:
  *   post:
  *     summary: Register a new admin

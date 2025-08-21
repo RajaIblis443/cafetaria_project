@@ -72,7 +72,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref } from 'vue'
 import SideBar from '../component/SideBar.vue'
 

@@ -1,3 +1,5 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <template>
   <div class="font-montserrat bg-gray-100 text-[#222]">
     <!-- Header with improved mobile navigation -->
@@ -164,7 +166,9 @@ import ProductServices from '@/services/productServices'
 const mobileMenuOpen = ref(false)
 
 // Infinite scroll state
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const allProducts = ref<any[]>([])
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const displayedProducts = ref<any[]>([])
 const loading = ref(false)
 const hasReachedEnd = ref(false)

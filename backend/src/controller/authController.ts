@@ -134,4 +134,38 @@ export class AuthController {
       });
     }
   }
+
+  static async logoutUser(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          error: "No token provided",
+        });
+      }
+
+      // Sign out dari Supabase
+      const { error: signOutError } = await supabase.auth.signOut();
+
+      if (signOutError) {
+        return res.status(500).json({
+          success: false,
+          error: signOutError.message,
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Logout successful",
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
 }
