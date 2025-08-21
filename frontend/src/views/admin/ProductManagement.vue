@@ -6,7 +6,7 @@
     <main class="flex-1 p-4 md:p-8 mt-0 md:mt-0">
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-0 mb-6">
         <button class="hidden sm:block mr-4 p-2 border-2 border-gray-300 rounded-lg hover:bg-gray-200">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" width  ="20" height="20" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M5 12h14m-7-7l-7 7l7 7" />
           </svg>
