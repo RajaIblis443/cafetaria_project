@@ -149,7 +149,7 @@ const handleLogin = async () => {
             router.push('/mitra/products'); // Sesuaikan dengan route tujuan
           }
           if (response.data.user.role == "admin") {
-            router.push('/admin/dashboard')
+            router.push('/admin/products')
           }
         }, 1500);
 

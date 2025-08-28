@@ -3,7 +3,7 @@
     <SideBar />
 
     <!-- Main Content -->
-    <main class="flex-1 pt-16 md:pt-0 p-4 md:p-8">
+    <main class="flex-1 pt-16 md:pt-10 p-4 md:p-8 ">
       <!-- Header Section -->
       <div class="flex fle// Get status text based on product data (for mitra view)
 const getStatusText = (product: Product) => {
@@ -182,13 +182,79 @@ const getStatusClass = (product: Product) => {
         </div>
       </div>
     </main>
+
+    <!-- Edit Modal -->
+    <div v-if="showEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-800">Edit Produk</h2>
+          <button @click="closeEditModal" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <form @submit.prevent="submitEditProduct" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+            <input v-model="editForm.name" type="text"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              required placeholder="Masukkan nama produk" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
+            <input v-model.number="editForm.price" type="number"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              required min="0" placeholder="Masukkan harga produk" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+            <textarea v-model="editForm.description"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              rows="3" required placeholder="Masukkan deskripsi produk"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Ganti Gambar (opsional)</label>
+            <input type="file" accept="image/*" @change="handleEditImageChange"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+            <p class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengganti gambar</p>
+          </div>
+
+          <div class="flex gap-3 justify-end pt-4">
+            <button type="button" @click="closeEditModal"
+              class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+              :disabled="editLoading">
+              Batal
+            </button>
+            <button type="submit"
+              class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="editLoading">
+              <span v-if="editLoading" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
+                </svg>
+                Menyimpan...
+              </span>
+              <span v-else>Simpan</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import ProductServices from '@/services/productServices'
 import SideBar from '../component/SideBar.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 
 // Define product interface based on your response
 interface Product {
@@ -207,6 +273,17 @@ interface Product {
 const products = ref<Product[]>([])
 const loading = ref(false)
 const error = ref('')
+
+// Edit modal state
+const showEditModal = ref(false)
+const editLoading = ref(false)
+const editProductId = ref<string | null>(null)
+const editForm = reactive({
+  name: '',
+  price: 0,
+  description: '',
+  image: null as File | null,
+})
 
 // Fetch products on component mount
 const fetchProducts = async () => {
@@ -257,8 +334,73 @@ const getStatusClass = (product: Product) => {
 
 // Handle actions
 const handleEdit = (productId: string) => {
-  // Navigate to edit page or open edit modal
-  console.log('Edit product:', productId)
+  const product = products.value.find(p => p.id === productId)
+  if (!product) return
+
+  // Set data untuk edit
+  editProductId.value = productId
+  editForm.name = product.name
+  editForm.price = product.price
+  editForm.description = product.description
+  editForm.image = null // Reset file input
+
+  // Buka modal
+  showEditModal.value = true
+}
+
+const handleEditImageChange = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    editForm.image = target.files[0]
+  }
+}
+
+const submitEditProduct = async () => {
+  if (!editProductId.value) return
+
+  try {
+    editLoading.value = true
+
+    const formData = new FormData()
+    formData.append('name', editForm.name)
+    formData.append('price', String(editForm.price))
+    formData.append('description', editForm.description)
+
+    // Hanya append gambar jika ada yang dipilih
+    if (editForm.image) {
+      formData.append('image', editForm.image)
+    }
+
+    await ProductServices.updateProduct(editProductId.value, formData)
+
+    // Refresh data produk
+    await fetchProducts()
+
+    // Tutup modal
+    showEditModal.value = false
+    editProductId.value = null
+
+    // Reset form
+    editForm.name = ''
+    editForm.price = 0
+    editForm.description = ''
+    editForm.image = null
+
+  } catch (err) {
+    console.error('Error updating product:', err)
+    alert('Gagal mengupdate produk')
+  } finally {
+    editLoading.value = false
+  }
+}
+
+const closeEditModal = () => {
+  showEditModal.value = false
+  editProductId.value = null
+  editForm.name = ''
+  editForm.price = 0
+  editForm.description = ''
+  editForm.image = null
 }
 
 const handleDelete = async (productId: string) => {

@@ -202,7 +202,7 @@ async function loadMoreProducts() {
     // Jika belum ada data, ambil semua dari ProductServices
     if (allProducts.value.length === 0) {
       console.log('Loading all products from ProductServices...')
-      const data = await ProductServices.getProducts()
+      const data = await ProductServices.getProductslanding()
       allProducts.value = Array.isArray(data) ? data : []
       console.log('Total products loaded:', allProducts.value.length)
     }

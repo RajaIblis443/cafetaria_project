@@ -2,9 +2,52 @@ import http from '@/lib/axios'
 import axios from 'axios'
 
 class ProductServices {
+  static async updateProduct(productId: string, productData: FormData) {
+    try {
+      const token = localStorage.getItem('auth_token')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const headers: any = {}
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`
+      }
+
+      // Gunakan axios langsung untuk FormData
+      const baseURL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000/api'
+      const response = await axios.put(`${baseURL}/product/update/${productId}`, productData, {
+        headers,
+      })
+
+      if (response.status >= 200 && response.status < 300) {
+        return response.data
+      }
+      throw new Error(`Unexpected response status: ${response.status}`)
+    } catch (error) {
+      console.error('Error updating product:', error)
+      throw error
+    }
+  }
   static async getProducts() {
     try {
-      const response = await http.get('/product/get')
+      const response = await await http.get('/product/get')
+      if (response.status >= 200 && response.status < 300) {
+        return response.data
+      }
+      throw new Error(`Unexpected response status: ${response.status}`)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      throw error
+    }
+  }
+
+  static async getProductslanding() {
+    try {
+      const response = await http.get('/product/get', {
+        params: {
+          is_approve: true,
+          is_available: true,
+        },
+      })
       if (response.status >= 200 && response.status < 300) {
         return response.data
       }

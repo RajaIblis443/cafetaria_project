@@ -68,7 +68,7 @@ export class ProductController {
   }
 
   static async getProducts(req: Request, res: Response) {
-    const { mitra_id, is_available, name } = req.query;
+    const { mitra_id, is_available, name, is_approve } = req.query;
 
     // Join dengan tabel users untuk mendapatkan informasi mitra
     let query = supabase.from("product").select(`
@@ -83,6 +83,9 @@ export class ProductController {
     if (is_available !== undefined) {
       query = query.eq("is_available", is_available === "true");
     }
+    if (is_approve !== undefined) {
+      query = query.eq("is_approve", is_approve === "true");
+    }
 
     if (name) {
       query = query.ilike("name", `%${name}%`);
@@ -95,7 +98,7 @@ export class ProductController {
     }
 
     if (!products || products.length === 0) {
-      return res.status(404).json({ message: "No products found" });
+      return res.status(200).json([]);
     }
 
     const BASE_IMAGE_URL =
@@ -181,6 +184,107 @@ export class ProductController {
       return res.status(200).json({ message: "Product approved successfully" });
     } catch (error) {
       console.error("Error approving product:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  static async updateProduct(req: Request, res: Response) {
+    const { id } = req.params;
+    const { name, price, description } = req.body;
+    const user = (req as any).user;
+
+    console.log("=== DEBUG UPDATE PRODUCT ===");
+    console.log("Product ID:", id);
+    console.log("Request body:", req.body);
+    console.log("Request file:", req.file);
+    console.log("User:", user);
+
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized User NotFound" });
+    }
+
+    if (!id) {
+      return res.status(400).json({ error: "Product ID is required" });
+    }
+
+    if (!name || !price || !description) {
+      return res
+        .status(400)
+        .json({ error: "Name, price, and description are required" });
+    }
+
+    // Pastikan user adalah mitra
+    if (user.role !== "mitra") {
+      return res.status(403).json({ error: "Only mitra can update products" });
+    }
+
+    try {
+      // Check if product exists and belongs to the user
+      const { data: existingProduct, error: productError } = await supabase
+        .from("product")
+        .select("*")
+        .eq("id", id)
+        .eq("mitra_id", user.id)
+        .single();
+
+      if (productError) {
+        return res.status(500).json({ error: productError.message });
+      }
+
+      if (!existingProduct) {
+        return res.status(404).json({
+          error:
+            "Product not found or you don't have permission to update this product",
+        });
+      }
+
+      // Prepare update data
+      const updateData: any = {
+        name,
+        price: Number(price),
+        description,
+      };
+
+      // Handle image update if new image is provided
+      if (req.file?.filename) {
+        updateData.image = "uploads/" + req.file.filename;
+
+        // Delete old image if exists
+        if (existingProduct.image) {
+          const oldImagePath = path.join(
+            __dirname,
+            "..",
+            "..",
+            existingProduct.image
+          );
+          fs.unlink(oldImagePath, (err) => {
+            if (err) {
+              console.error("Failed to delete old image:", err);
+            } else {
+              console.log("Old image deleted successfully");
+            }
+          });
+        }
+      }
+
+      // Update product in database
+      const { data: updatedProduct, error: updateError } = await supabase
+        .from("product")
+        .update(updateData)
+        .eq("id", id)
+        .eq("mitra_id", user.id)
+        .select("*");
+
+      if (updateError) {
+        return res.status(500).json({ error: updateError.message });
+      }
+
+      return res.status(200).json({
+        message: "Product updated successfully",
+        product: updatedProduct,
+      });
+    } catch (error) {
+      console.error("Error updating product:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
   }

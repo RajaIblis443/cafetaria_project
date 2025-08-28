@@ -97,6 +97,69 @@ router.get("/get", ProductController.getProducts);
 
 /**
  * @swagger
+ * /api/product/update/{id}:
+ *   put:
+ *     summary: Update product
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Product ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Optional - new image to replace existing one
+ *     responses:
+ *       200:
+ *         description: Product updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 product:
+ *                   $ref: '#/components/schemas/Product'
+ *       400:
+ *         description: Missing fields or Product ID required
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Only mitra can update products
+ *       404:
+ *         description: Product not found or no permission
+ *       500:
+ *         description: Server error
+ */
+router.put(
+  "/update/:id",
+  authMiddleware,
+  roleMiddleware(["mitra"]),
+  upload.single("image"),
+  ProductController.updateProduct
+);
+
+/**
+ * @swagger
  * /api/product/availability/{id}:
  *   put:
  *     summary: Update product availability status
