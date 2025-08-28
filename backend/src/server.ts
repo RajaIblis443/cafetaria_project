@@ -34,8 +34,11 @@ const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
       ? [
-          "https://cafetaria-project.vercel.app/",
+          "https://cafetaria-project.vercel.app",
           "https://cafetaria-frontend.vercel.app",
+          "https://cafetaria-backend.vercel.app",
+          // Allow any vercel app for development
+          /^https:\/\/.*\.vercel\.app$/,
         ]
       : [
           "http://localhost:5173",
@@ -45,9 +48,14 @@ const corsOptions = {
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200, // For legacy browser support
 };
 
 app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options("*", cors(corsOptions));
+
 app.use(helmet({ contentSecurityPolicy: false }));
 
 app.use(morgan("combined"));
