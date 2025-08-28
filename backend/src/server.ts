@@ -7,7 +7,7 @@ import { AuthController } from "./controller/authController";
 import authRouter from "./routes/authRouter";
 import productRouter from "./routes/productRouter";
 import swaggerUi from "swagger-ui-express";
-import { swaggerSpec } from "./swagger";
+import { swaggerSpec } from "../swagger";
 import path from "path";
 
 dotenv.config();
