@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/multi-word-component-names -->
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <template>
   <div class="min-h-screen flex items-center justify-center bg-white">
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg flex flex-col items-center">
@@ -63,6 +65,32 @@ import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import AuthServices from '../services/authServices';
 
+// Define interfaces for type safety
+interface LoginResponse {
+  success: boolean;
+  data: {
+    session: {
+      access_token: string;
+    };
+    user: {
+      role: string;
+    };
+  };
+  message?: string;
+}
+
+interface ErrorResponse {
+  response?: {
+    status: number;
+    data?: {
+      message?: string;
+    };
+  };
+  request?: unknown;
+  code?: string;
+  message?: string;
+}
+
 // Router untuk navigasi
 const router = useRouter();
 
@@ -89,7 +117,7 @@ const togglePasswordVisibility = () => {
 };
 
 // Function untuk menampilkan pesan
-const showMessage = (msg: any, type = 'error') => {
+const showMessage = (msg: string, type = 'error') => {
   message.value = msg;
   messageType.value = type;
 
@@ -132,7 +160,7 @@ const handleLogin = async () => {
     try {
       console.log(`Login attempt ${currentRetry + 1}/${maxRetries + 1}`);
 
-      const response = await AuthServices.login(email.value, password.value);
+      const response = await AuthServices.login(email.value, password.value) as LoginResponse;
 
       if (response && response.success) {
         showMessage('Login berhasil! Mengalihkan...', 'success');
@@ -156,21 +184,24 @@ const handleLogin = async () => {
         return true; // Success
       } else {
         // Handle berbagai jenis response error
-        const errorMessage = response?.message || 'Login gagal. Periksa email dan password Anda.';
+        const errorMessage = (response && typeof response === 'object' && 'message' in response ? response.message : undefined) || 'Login gagal. Periksa email dan password Anda.';
         showMessage(errorMessage);
         return false; // Failed
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`Login error (attempt ${currentRetry + 1}):`, error);
+
+      // Type guard untuk error response
+      const typedError = error as ErrorResponse;
 
       // Handle berbagai jenis error
       let errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
       let shouldRetry = false;
 
-      if (error.response) {
+      if (typedError.response) {
         // Server responded with error status
-        const status = error.response.status;
-        const data = error.response.data;
+        const status = typedError.response.status;
+        const data = typedError.response.data;
 
         switch (status) {
           case 400:
@@ -199,17 +230,17 @@ const handleLogin = async () => {
             errorMessage = data?.message || `Terjadi kesalahan server (${status}). Silakan coba lagi.`;
             shouldRetry = status >= 500; // Retry only for server errors
         }
-      } else if (error.request) {
+      } else if (typedError.request) {
         // Network error
         errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
         shouldRetry = true;
-      } else if (error.code === 'ECONNABORTED') {
+      } else if (typedError.code === 'ECONNABORTED') {
         // Timeout error
         errorMessage = 'Permintaan timeout. Silakan coba lagi.';
         shouldRetry = true;
       } else {
         // Other errors
-        errorMessage = error.message || 'Terjadi kesalahan yang tidak diketahui.';
+        errorMessage = typedError.message || 'Terjadi kesalahan yang tidak diketahui.';
       }
 
       // Retry logic for certain errors

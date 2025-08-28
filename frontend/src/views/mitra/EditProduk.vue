@@ -76,34 +76,49 @@
 import { ref } from 'vue'
 import SideBar from '../component/SideBar.vue'
 
-const isSidebarOpen = ref(false)
-const product = ref({
+// Define interface for product
+interface Product {
+  name: string;
+  price: string;
+  image: string | null;
+}
+
+const product = ref<Product>({
   name: '',
   price: '',
   image: null
 })
 
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value
-}
-
 const triggerImageUpload = () => {
-  document.getElementById('image-upload').click()
+  const fileInput = document.getElementById('image-upload') as HTMLInputElement | null;
+  if (fileInput) {
+    fileInput.click();
+  }
 }
 
-const handleImageUpload = (event) => {
-  const file = event.target.files[0]
+const handleImageUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+
   if (file) {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      product.value.image = e.target.result
-    }
-    reader.readAsDataURL(file)
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const result = e.target?.result;
+      if (typeof result === 'string') {
+        product.value.image = result;
+      }
+    };
+    reader.readAsDataURL(file);
   }
 }
 
 const removeImage = () => {
-  product.value.image = null
+  product.value.image = null;
+  // Reset file input
+  const fileInput = document.getElementById('image-upload') as HTMLInputElement | null;
+  if (fileInput) {
+    fileInput.value = '';
+  }
 }
 </script>
 
