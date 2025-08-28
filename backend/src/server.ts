@@ -31,24 +31,7 @@ app.get("/swagger.json", (req, res) => {
 
 // CORS configuration
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? [
-          "https://cafetaria-project.vercel.app",
-          "https://cafetaria-frontend.vercel.app",
-          "https://cafetaria-backend.vercel.app",
-          // Allow any vercel app for development
-          /^https:\/\/.*\.vercel\.app$/,
-        ]
-      : [
-          "http://localhost:5173",
-          "http://127.0.0.1:5173",
-          "http://localhost:3000",
-        ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 200, // For legacy browser support
+  origin: ["*"],
 };
 
 app.use(cors(corsOptions));
