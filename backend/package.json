@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "build": "tsc",
-    "start": "node dist/src/server.js"
+    "start": "node dist/src/server.js",
+    "vercel-build": "echo 'Build complete'",
+    "test": "echo 'No tests specified'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.1",
